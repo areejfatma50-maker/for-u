@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For My Valentine 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
+body{
+  background:linear-gradient(120deg,#ffd6e8,#c2f0ff);
+  text-align:center;
+  overflow-x:hidden;
+}
+.hidden{display:none}
+section{padding:60px 20px;position:relative}
+
+/* FLOATING HEARTS */
+.hearts span{
+  position:fixed;
+  bottom:-40px;
+  font-size:36px;
+  animation:float 10s linear infinite;
+}
+@keyframes float{
+  to{transform:translateY(-120vh) rotate(360deg);}
+}
+
+/* BUTTON */
+button{
+  padding:12px 30px;
+  border:none;
+  border-radius:30px;
+  background:#ff4d6d;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:20px;
+}
+.no{
+  position:absolute;
+  background:#ddd;
+  color:black;
+}
+
+/* DUDU GIF */
+.dudu{width:190px}
+
+/* LETTER */
+#letterBox{
+  background:white;
+  max-width:420px;
+  margin:20px auto;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* ENVELOPES */
+.envelopes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:30px;
+  justify-content:center;
+  margin-top:40px;
+}
+.envelope{
+  width:320px;
+  height:230px;
+  background:#ffb3c6;
+  border-radius:18px;
+  position:relative;
+  cursor:pointer;
+  animation:shake 2s infinite;
+  overflow:hidden;
+  box-shadow:0 15px 35px rgba(0,0,0,0.25);
+}
+@keyframes shake{
+  0%,100%{transform:rotate(0)}
+  25%{transform:rotate(1deg)}
+  75%{transform:rotate(-1deg)}
+}
+.flap{
+  position:absolute;
+  top:0;
+  width:100%;
+  height:110px;
+  background:#ff85a2;
+  clip-path:polygon(0 0,50% 60%,100% 0);
+  transform-origin:top;
+  transition:0.6s;
+}
+.envelope.open .flap{transform:rotateX(180deg)}
+
+.envelope-gif{
+  position:absolute;
+  top:-75px;
+  left:50%;
+  transform:translateX(-50%);
+  width:150px;
+  transition:opacity 0.6s;
+  z-index:2;
+}
+
+.content{
+  position:absolute;
+  bottom:-120%;
+  width:100%;
+  padding:10px;
+  transition:0.6s;
+}
+.envelope.open .content{bottom:10px}
+
+.content img,
+.content video{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:14px;
+}
+
+/* HEART BURST */
+@keyframes burst{
+  0%{transform:scale(0);opacity:1;}
+  50%{transform:scale(1.5);opacity:0.7;}
+  100%{transform:scale(2);opacity:0;}
+}
+.burst-heart{
+  position:absolute;
+  font-size:36px;
+  animation:burst 0.8s forwards;
+  pointer-events:none;
+}
+
+/* FULLSCREEN VIEW */
+#viewer{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+#viewer img,#viewer video{
+  max-width:90%;
+  max-height:90%;
+  border-radius:15px;
+}
+
+/* MESSAGES */
+#messages{max-width:420px;margin:40px auto}
+.msg{
+  background:#ff85a2;
+  color:white;
+  padding:14px;
+  border-radius:20px;
+  margin:10px 0;
+  cursor:pointer;
+}
+
+/* QUIZ */
+.quiz{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  max-width:420px;
+  margin:40px auto;
+}
+.quiz div{
+  background:#ff85a2;
+  color:white;
+  padding:12px;
+  margin:10px;
+  border-radius:12px;
+  cursor:pointer;
+}
+
+/* MUSIC */
+#music-panel{
+  position:fixed;
+  bottom:15px;
+  right:15px;
+  background:white;
+  padding:10px;
+  border-radius:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hearts">
+  <span style="left:10%">💖</span>
+  <span style="left:30%">💗</span>
+  <span style="left:50%">💞</span>
+  <span style="left:70%">🌸</span>
+</div>
+
+<!-- INTRO -->
+<section id="intro">
+  <img class="dudu" src="https://media.tenor.com/36d8ovZxZsgAAAAi/bubu-bubu-dudu.gif">
+  <h2 id="introText">Hey you…</h2>
+  <p>tap anywhere 💕</p>
+</section>
+
+<!-- VALENTINE -->
+<section id="valentine" class="hidden">
+  <img class="dudu" src="https://media.tenor.com/dALFjscRSeYAAAAi/bubu-dudu-sseeyall.gif">
+  <h1>Will you be my Valentine? 💘</h1>
+  <button onclick="start()">YES</button>
+  <button class="no" id="noBtn">NO</button>
+</section>
+
+<!-- LETTER -->
+<section id="letterSection" class="hidden">
+  <div id="letterBox">
+    <h3>My Letter 💌</h3>
+    <p>Mere jaan… yahan apna dil likho ❤️</p>
+    <button onclick="next('photoSection')">Next 💖</button>
+  </div>
+</section>
+
+<!-- PHOTOS -->
+<section id="photoSection" class="hidden">
+  <h2>Open these slowly 💝</h2>
+  <div class="envelopes" id="photoEnv"></div>
+</section>
+
+<!-- MESSAGES -->
+<section id="messageSection" class="hidden">
+  <div id="messages">
+    <div class="msg" onclick="nextMsg(this)">You make me smile 😊</div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quizSection" class="hidden">
+  <div class="quiz">
+    <p>Who loves you the most? 💖</p>
+    <div onclick="quiz()">Me</div>
+    <div onclick="quiz()">Anyone else</div>
+  </div>
+</section>
+
+<!-- GIF -->
+<section id="gifSection" class="hidden">
+  <img class="dudu" src="https://media.tenor.com/yZZoDKXhRWYAAAAd/dudu-scared-bubu-dudu-kiss.gif">
+  <button onclick="next('videoSection')">One last secret 🎁</button>
+</section>
+
+<!-- VIDEO -->
+<section id="videoSection" class="hidden">
+  <h2>Final Surprise 💖</h2>
+  <div class="envelopes">
+    <div class="envelope" onclick="openEnv(this)">
+      <img class="envelope-gif" src="https://media.tenor.com/yZZoDKXhRWYAAAAd/dudu-scared-bubu-dudu-kiss.gif">
+      <div class="flap"></div>
+      <div class="content">
+        <video src="panda.mp4" controls onclick="view(this)"></video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MUSIC -->
+<div id="music-panel">
+  <button onclick="music.play()">▶</button>
+  <button onclick="music.pause()">⏸</button>
+</div>
+<audio id="music" src="Jeene Laga Hoon.mp3" loop></audio>
+
+<div id="viewer" onclick="this.style.display='none'"></div>
+
+<script>
+/* INTRO */
+const intro=document.getElementById("intro");
+const introText=document.getElementById("introText");
+const lines=["Hi babeee","I made this for you","Because you are special"];
+let i=0;
+intro.onclick=()=>{
+  i++;
+  if(i<lines.length) introText.innerText=lines[i];
+  else{
+    intro.style.display="none";
+    document.getElementById("valentine").classList.remove("hidden");
+  }
+};
+
+/* NO BUTTON */
+const noBtn=document.getElementById("noBtn");
+noBtn.onmouseover=()=>{noBtn.style.left=Math.random()*80+"%";noBtn.style.top=Math.random()*80+"%";};
+
+/* START */
+function start(){
+  document.getElementById("valentine").style.display="none";
+  document.getElementById("letterSection").classList.remove("hidden");
+  music.play();
+}
+
+/* NEXT */
+function next(id){
+  document.getElementById(id).classList.remove("hidden");
+  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+/* ENVELOPES WITH PHOTOS */
+let opened = 0; // <-- fixed
+
+const envelopesData = [
+  { photo: "photo1.jpg.jpeg", gif: "https://media.tenor.com/36d8ovZxZsgAAAAi/bubu-bubu-dudu.gif" },
+  { photo: "photo2.jpg.jpeg", gif: "https://media.tenor.com/dALFjscRSeYAAAAi/bubu-dudu-sseeyall.gif" },
+  { photo: "photo3.jpg.jpeg", gif: "https://media.tenor.com/yZZoDKXhRWYAAAAd/dudu-scared-bubu-dudu-kiss.gif" },
+  { photo: "photo4.jpg.png", gif: "https://media.tenor.com/7Y7W9zZx1ZgAAAAi/bubu-dudu-love.gif" }
+];
+
+envelopesData.forEach((item) => {
+  photoEnv.innerHTML += `
+  <div class="envelope" onclick="openPhoto(this)">
+    <img class="envelope-gif" src="${item.gif}">
+    <div class="flap"></div>
+    <div class="content">
+      <img src="${item.photo}" onclick="view(this)">
+    </div>
+  </div>`;
+});
+
+// openPhoto function
+function openPhoto(e){
+  if(!e.classList.contains("open")){
+    e.classList.add("open");
+
+    const gif = e.querySelector(".envelope-gif");
+    if(gif){
+      gif.style.opacity = "0";
+      setTimeout(()=>{gif.style.display="none";},600);
+    }
+
+    const heart = document.createElement("div");
+    heart.className = "burst-heart";
+    heart.style.left = "50%";
+    heart.style.top = "50%";
+    heart.innerText = "💖";
+    e.appendChild(heart);
+    setTimeout(()=>heart.remove(),800);
+
+    opened++;
+    if(opened===4) next("messageSection");
+  }
+}
+
+/* VIEW */
+function view(el){
+  event.stopPropagation();
+  const v=document.getElementById("viewer");
+  v.innerHTML=el.outerHTML;
+  v.style.display="flex";
+}
+
+/* MESSAGES */
+const msgs=["I miss you 💕","You are my world 🌍","Forever us 💖"];
+let m=0;
+function nextMsg(el){
+  m++;
+  if(m<msgs.length){
+    const d=document.createElement("div");
+    d.className="msg";
+    d.innerText=msgs[m];
+    d.onclick=()=>nextMsg(d);
+    el.parentNode.appendChild(d);
+  }else{
+    next("quizSection");
+  }
+  el.onclick=null;
+}
+
+/* QUIZ */
+function quiz(){ next("gifSection"); }
+
+/* VIDEO ENVELOPE */
+function openEnv(e){ e.classList.toggle("open"); }
+</script>
+
+</body>
+</html>
